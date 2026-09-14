@@ -235,24 +235,67 @@
   .kicker{font:500 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;
     color:var(--sky);margin:0 0 14px}
 
-  /* ── Screenshot rail ─────────────────────────────────────────────────── */
-  .rail{
-    display:flex;gap:18px;margin:34px 0 0;padding:4px 0 22px;
-    overflow-x:auto;scroll-snap-type:x mandatory;
-    scrollbar-width:none;
-    /* Break the shell so the rail bleeds to the edges on a phone. */
-    margin-inline:calc(50% - 50vw);padding-inline:max(22px,calc(50vw - var(--shell)/2));
+  /* ── The stage ───────────────────────────────────────────────────────────
+     One device, large and sharp, instead of a rail of six thumbnails. The rail
+     shrank a 1440×3120 capture into 208 CSS px, which any 3× phone then
+     upscaled — that is what made it look soft, and six tall slivers read as a
+     contact sheet rather than a product.
+
+     Behind the device sits its own screen, blurred: a 40px thumbnail scaled up
+     and blurred to 64px, so the page glows in whatever colour the app is
+     currently showing. It costs under a kilobyte and it is the whole premium
+     effect.                                                                 */
+  .stage{
+    position:relative;margin:38px 0 0;display:flex;justify-content:center;
+    isolation:isolate;
   }
-  .rail::-webkit-scrollbar{display:none}
-  .shot{flex:none;width:208px;scroll-snap-align:center}
-  .frame{
-    border-radius:26px;border:1px solid #223247;padding:5px;
-    background:linear-gradient(160deg,#1b2740,#101827);
-    box-shadow:0 22px 50px -22px rgba(0,0,0,.85);
+  .bleed{
+    position:absolute;z-index:-1;left:50%;top:48%;
+    /* 100% is the STAGE, not the viewport: a vw-sized absolute child sticks out
+       past the shell's gutter and widens the document even under
+       overflow-x:hidden, which showed up as a horizontal scroll at 390px. */
+    width:min(720px,100%);height:auto;
+    transform:translate(-50%,-50%);
+    filter:blur(64px) saturate(150%);opacity:.42;
+    mask-image:radial-gradient(closest-side,#000 35%,transparent 100%);
+    -webkit-mask-image:radial-gradient(closest-side,#000 35%,transparent 100%);
+    pointer-events:none;transition:opacity .45s ease;
   }
-  .frame img{display:block;width:100%;border-radius:21px}
-  .shot p{margin:11px 2px 0;font:500 12px/1.4 var(--mono);letter-spacing:.06em;
-    color:var(--text-3);text-transform:uppercase}
+  .device{
+    width:min(300px,62vw);border-radius:40px;padding:6px;
+    background:linear-gradient(158deg,#31435e,#0d1421 62%);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,.07) inset,
+      0 46px 100px -34px rgba(0,0,0,.95),
+      0 0 70px -30px rgba(0,180,219,.4);
+  }
+  .device img{
+    /* height:auto is NOT optional. The width/height ATTRIBUTES on an <img> are
+       presentational hints that map to CSS width/height, so setting only
+       `width:100%` leaves `height:1560px` in force and the screenshot renders
+       at full natural height inside a 288px box — stretched and resampled.
+       That was the distortion in the rail this section replaced. */
+    display:block;width:100%;height:auto;border-radius:34px;background:#F7F5F0;
+    transition:opacity .2s ease;
+  }
+  .stage.swap .device img,.stage.swap .bleed{opacity:0}
+
+  .tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:26px 0 0}
+  .tab{
+    font:500 13px/1 Satoshi,sans-serif;color:var(--text-3);cursor:pointer;
+    padding:9px 15px;border-radius:999px;border:1px solid var(--hair);
+    background:rgba(255,255,255,.03);
+    transition:color .2s,border-color .2s,background .2s;
+  }
+  .tab:hover{color:var(--text-2);border-color:#2b3c55}
+  .tab[aria-selected="true"]{
+    color:var(--text);border-color:rgba(72,202,228,.55);
+    background:rgba(0,180,219,.11);
+  }
+  @media(max-width:420px){
+    .tabs{gap:6px;margin-top:22px}
+    .tab{padding:8px 12px;font-size:12px}
+  }
 
   /* ── Features ────────────────────────────────────────────────────────── */
   .feat{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin:34px 0 0;
@@ -417,14 +460,15 @@
       tithi at Imphal sunrise, and the printed almanac as the final word.
     </p>
 
-    <div class="rail" id="rail">
-      <figure class="shot"><div class="frame"><img src="img/shot-01_today.webp" alt="The Today screen showing the Meitei date, tithi and sunrise" width="420" height="910" loading="lazy" decoding="async"></div><p>Today</p></figure>
-      <figure class="shot"><div class="frame"><img src="img/shot-02_month.webp" alt="The month grid with Meitei day numbers and festival markers" width="420" height="910" loading="lazy" decoding="async"></div><p>The month</p></figure>
-      <figure class="shot"><div class="frame"><img src="img/shot-04_festivals.webp" alt="The festivals list with a year picker" width="420" height="910" loading="lazy" decoding="async"></div><p>Festivals</p></figure>
-      <figure class="shot"><div class="frame"><img src="img/shot-07_scan.webp" alt="Scanning a printed list of dates into the planner" width="420" height="910" loading="lazy" decoding="async"></div><p>Scan a list</p></figure>
-      <figure class="shot"><div class="frame"><img src="img/shot-14_today_bengali.webp" alt="The same screen rendered in Bengali script" width="420" height="910" loading="lazy" decoding="async"></div><p>In Bengali</p></figure>
-      <figure class="shot"><div class="frame"><img src="img/shot-09_themes.webp" alt="The theme picker showing colour packs" width="420" height="910" loading="lazy" decoding="async"></div><p>Themes</p></figure>
+    <div class="stage" id="stage">
+      <img class="bleed" id="bleed" src="img/bleed-01_today.webp" alt="" aria-hidden="true">
+      <div class="device">
+        <img id="screen" src="img/shot-01_today.webp" width="720" height="1560"
+             alt="The Today screen: the Meitei date, the tithi and Imphal sunrise"
+             decoding="async">
+      </div>
     </div>
+    <div class="tabs" id="tabs" role="tablist" aria-label="App screens"></div>
 
     <div class="feat">
       <div class="f">
@@ -608,6 +652,65 @@
         K.counts.days.toLocaleString("en-IN");
       document.getElementById("s-fest").textContent = K.counts.festivals;
     }
+  }
+
+  /* ── The stage switcher ─────────────────────────────────────────────────
+     Tabs are built here rather than written into the markup so the list stays
+     in one place. Every screen is preloaded once the page is idle, so a tap
+     crossfades instantly instead of flashing an empty device. */
+  var SCREENS = [
+    ["01_today", "Today",
+     "The Today screen: the Meitei date, the tithi and Imphal sunrise"],
+    ["02_month", "Month",
+     "The month grid with Meitei day numbers and festival markers"],
+    ["04_festivals", "Festivals",
+     "The festivals list with a year picker running 2024 to 2030"],
+    ["07_scan", "Scan",
+     "Scanning a printed list of dates into the planner"],
+    ["14_today_bengali", "Bengali",
+     "The same Today screen rendered in Bengali script"]
+  ];
+
+  var stage = document.getElementById("stage");
+  var screenEl = document.getElementById("screen");
+  var bleedEl = document.getElementById("bleed");
+  var tabsEl = document.getElementById("tabs");
+
+  if(stage && tabsEl){
+    var at = 0, busy = false;
+
+    SCREENS.forEach(function(s, i){
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "tab"; b.textContent = s[1];
+      b.setAttribute("role", "tab");
+      b.setAttribute("aria-selected", i === 0 ? "true" : "false");
+      b.addEventListener("click", function(){ show(i); });
+      tabsEl.appendChild(b);
+    });
+
+    function show(i){
+      if(i === at || busy) return;
+      busy = true; at = i;
+      var s = SCREENS[i];
+      [].forEach.call(tabsEl.children, function(b, j){
+        b.setAttribute("aria-selected", j === i ? "true" : "false");
+      });
+      stage.classList.add("swap");
+      setTimeout(function(){
+        screenEl.src = "img/shot-" + s[0] + ".webp";
+        screenEl.alt = s[2];
+        bleedEl.src = "img/bleed-" + s[0] + ".webp";
+        stage.classList.remove("swap");
+        busy = false;
+      }, 200);
+    }
+
+    addEventListener("load", function(){
+      SCREENS.slice(1).forEach(function(s){
+        new Image().src = "img/shot-" + s[0] + ".webp";
+        new Image().src = "img/bleed-" + s[0] + ".webp";
+      });
+    });
   }
 
   /* ── Chrome ───────────────────────────────────────────────────────────── */
