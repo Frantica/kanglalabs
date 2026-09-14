@@ -123,24 +123,45 @@
     color:var(--text-2);line-height:1.62;
   }
 
-  /* ── Store buttons ───────────────────────────────────────────────────── */
-  .stores{display:flex;gap:12px;margin:32px 0 0;flex-wrap:wrap}
+  /* ── Store buttons ───────────────────────────────────────────────────────
+     Side by side at every width, equal halves. They are the only thing on the
+     page that has to be pressed, so they get the weight: a lit rim, a lift on
+     press, and a glow under the one the visitor can actually install from.
+     Never a gradient FILL — a store's own mark sitting on the brand gradient
+     is two logos fighting (BRAND-SYSTEM, and the same rule the reel covers
+     follow). The lift does the selling instead.                            */
+  .stores{display:flex;gap:12px;margin:32px 0 0}
   .btn{
-    display:inline-flex;align-items:center;gap:10px;text-decoration:none;
-    color:var(--text);font-weight:500;font-size:15px;
-    padding:13px 21px;border-radius:14px;
-    border:1px solid var(--hair);background:var(--surface);
-    transition:transform .18s ease,border-color .2s,background .2s;
+    flex:1 1 0;min-width:0;
+    display:inline-flex;align-items:center;justify-content:center;gap:11px;
+    text-decoration:none;color:var(--text);font-weight:500;font-size:15px;
+    padding:15px 18px;border-radius:16px;position:relative;
+    border:1px solid #243449;
+    background:linear-gradient(180deg,#1a2438,#121a2b);
+    box-shadow:0 1px 0 rgba(255,255,255,.05) inset, 0 10px 26px -16px #000;
+    transition:transform .16s ease,border-color .2s,box-shadow .2s;
   }
-  .btn svg{width:19px;height:19px;flex:none}
-  .btn:hover{transform:translateY(-2px);border-color:rgba(72,202,228,.44)}
+  .btn svg{width:22px;height:22px;flex:none}
+  .btn:hover{transform:translateY(-2px);border-color:rgba(72,202,228,.5);
+    box-shadow:0 1px 0 rgba(255,255,255,.07) inset, 0 16px 34px -18px #000}
+  .btn:active{transform:translateY(0)}
   .btn.primary{
-    border-color:rgba(72,202,228,.5);
-    background:linear-gradient(180deg,rgba(0,180,219,.14),rgba(0,119,255,.07));
+    border-color:rgba(72,202,228,.55);
+    background:linear-gradient(180deg,#16304a,#101f34);
+    box-shadow:0 1px 0 rgba(255,255,255,.08) inset,
+               0 0 0 1px rgba(0,180,219,.14),
+               0 14px 34px -18px rgba(0,180,219,.55);
   }
-  .btn small{display:block;font-size:10.5px;letter-spacing:.09em;
+  .btn small{display:block;font-size:10px;letter-spacing:.1em;
     text-transform:uppercase;color:var(--text-3);font-family:var(--mono);line-height:1.5}
-  .btn span{line-height:1.15}
+  .btn span{line-height:1.15;white-space:nowrap}
+  @media(max-width:400px){
+    .stores{gap:9px}
+    .btn{padding:13px 10px;gap:8px}
+    .btn svg{width:19px;height:19px}
+    .btn span{font-size:13.5px}
+    .btn small{font-size:9px;letter-spacing:.05em}
+  }
 
   /* ── The today card: the hook. Real rows out of the shipped database. ─── */
   .today{
@@ -194,10 +215,6 @@
     .today-side{flex-direction:column}
     .cell{border-right:0;border-bottom:1px solid var(--hair)}
     .cell:last-child{border-bottom:0}
-    /* Full-width targets: the standard on a phone, and the two rows the
-       buttons collapsed into looked like an accident. */
-    .stores{flex-direction:column;gap:10px}
-    .btn{width:100%;justify-content:center}
   }
 
   /* ── Stats ───────────────────────────────────────────────────────────── */
@@ -249,19 +266,35 @@
   @media(max-width:860px){.feat{grid-template-columns:repeat(2,1fr)}}
   @media(max-width:560px){.feat{grid-template-columns:1fr}}
 
-  /* ── Elsewhere ───────────────────────────────────────────────────────── */
+  /* ── Elsewhere ───────────────────────────────────────────────────────────
+     Three across at EVERY width, never a stack. Stacked rows read as a list of
+     settings; an icon grid reads as somewhere to tap, and the icon is what the
+     eye finds, so it leads and the words sit under it.                      */
   .links{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:30px 0 0}
   .link{
-    display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text);
-    padding:17px 19px;border-radius:15px;border:1px solid var(--hair);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:4px;text-align:center;text-decoration:none;color:var(--text);
+    padding:22px 12px 20px;border-radius:16px;border:1px solid var(--hair);
     background:var(--ink-2);font-weight:500;font-size:15px;
     transition:border-color .2s,transform .18s ease,background .2s;
   }
   .link:hover{border-color:rgba(72,202,228,.44);transform:translateY(-2px);background:var(--surface)}
-  .link svg{width:19px;height:19px;fill:var(--text-2);flex:none}
-  .link i{font-style:normal;font:400 12px/1 var(--mono);color:var(--text-3);display:block;margin-top:3px}
-  .link .go{margin-left:auto;color:var(--text-3);font-size:19px;line-height:1}
-  @media(max-width:700px){.links{grid-template-columns:1fr}}
+  .link .ic{
+    width:44px;height:44px;border-radius:50%;display:grid;place-items:center;
+    margin-bottom:8px;border:1px solid var(--hair);
+    background:linear-gradient(180deg,rgba(0,180,219,.13),rgba(0,119,255,.05));
+    transition:border-color .2s;
+  }
+  .link:hover .ic{border-color:rgba(72,202,228,.5)}
+  .link svg{width:20px;height:20px;fill:var(--sky);flex:none}
+  .link i{font-style:normal;font:400 11.5px/1.35 var(--mono);color:var(--text-3);
+    display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  @media(max-width:420px){
+    .links{gap:9px}
+    .link{padding:18px 6px 16px;font-size:13.5px}
+    .link .ic{width:38px;height:38px;margin-bottom:6px}
+    .link i{font-size:10px}
+  }
 
   /* ── Footer ──────────────────────────────────────────────────────────── */
   footer{
@@ -433,16 +466,16 @@
     <p class="sub">Manipuri-first apps, made in Imphal. Kumsing is the first.</p>
     <div class="links">
       <a class="link" href="https://www.instagram.com/kanglalabs/">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.3.1 1.7.1 4.8s0 3.5-.1 4.8c0 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2 0-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.5.1-4.8c0-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.1 0-3.5 0-4.7.1-1.1 0-1.7.2-2.1.3-.5.2-.9.4-1.2.8-.4.3-.6.7-.8 1.2-.1.4-.3 1-.3 2.1C2.8 9.7 2.8 10.1 2.8 12s0 2.3.1 3.5c0 1.1.2 1.7.3 2.1.2.5.4.9.8 1.2.3.4.7.6 1.2.8.4.1 1 .3 2.1.3 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c1.1 0 1.7-.2 2.1-.3.5-.2.9-.4 1.2-.8.4-.3.6-.7.8-1.2.1-.4.3-1 .3-2.1.1-1.2.1-1.6.1-3.5s0-2.3-.1-3.5c0-1.1-.2-1.7-.3-2.1-.2-.5-.4-.9-.8-1.2-.3-.4-.7-.6-1.2-.8-.4-.1-1-.3-2.1-.3-1.2-.1-1.6-.1-4.7-.1zm0 3.1a4.9 4.9 0 1 1 0 9.8 4.9 4.9 0 0 1 0-9.8zm0 8a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4zm6.3-8.2a1.2 1.2 0 1 1-2.3 0 1.2 1.2 0 0 1 2.3 0z"/></svg>
-        <span>Instagram<i>@kanglalabs</i></span><span class="go">&rsaquo;</span>
+        <span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.3.1 1.7.1 4.8s0 3.5-.1 4.8c0 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2 0-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.5.1-4.8c0-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.1 0-3.5 0-4.7.1-1.1 0-1.7.2-2.1.3-.5.2-.9.4-1.2.8-.4.3-.6.7-.8 1.2-.1.4-.3 1-.3 2.1C2.8 9.7 2.8 10.1 2.8 12s0 2.3.1 3.5c0 1.1.2 1.7.3 2.1.2.5.4.9.8 1.2.3.4.7.6 1.2.8.4.1 1 .3 2.1.3 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c1.1 0 1.7-.2 2.1-.3.5-.2.9-.4 1.2-.8.4-.3.6-.7.8-1.2.1-.4.3-1 .3-2.1.1-1.2.1-1.6.1-3.5s0-2.3-.1-3.5c0-1.1-.2-1.7-.3-2.1-.2-.5-.4-.9-.8-1.2-.3-.4-.7-.6-1.2-.8-.4-.1-1-.3-2.1-.3-1.2-.1-1.6-.1-4.7-.1zm0 3.1a4.9 4.9 0 1 1 0 9.8 4.9 4.9 0 0 1 0-9.8zm0 8a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4zm6.3-8.2a1.2 1.2 0 1 1-2.3 0 1.2 1.2 0 0 1 2.3 0z"/></svg></span>
+        <span>Instagram</span><i>@kanglalabs</i>
       </a>
       <a class="link" href="https://www.facebook.com/profile.php?id=61594426287205">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.3v7A10 10 0 0 0 22 12z"/></svg>
-        <span>Facebook<i>Kumsing</i></span><span class="go">&rsaquo;</span>
+        <span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.3v7A10 10 0 0 0 22 12z"/></svg></span>
+        <span>Facebook</span><i>Kumsing</i>
       </a>
       <a class="link" href="mailto:kanglalabs@gmail.com">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm9 7.1L4.6 7H19.4L12 12.1zM4 8.6V17h16V8.6l-7.4 5.1a1 1 0 0 1-1.2 0L4 8.6z"/></svg>
-        <span>Email<i>kanglalabs@gmail.com</i></span><span class="go">&rsaquo;</span>
+        <span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm9 7.1L4.6 7H19.4L12 12.1zM4 8.6V17h16V8.6l-7.4 5.1a1 1 0 0 1-1.2 0L4 8.6z"/></svg></span>
+        <span>Email</span><i>Say hello</i>
       </a>
     </div>
   </section>
@@ -469,47 +502,41 @@
   var AND = /Android/.test(UA);
 
   /* ── Store links ────────────────────────────────────────────────────────
-     The https store URL is claimed by BOTH the browser and the store app, so
-     tapping one inside Instagram's in-app browser either renders the store as
-     a web page or throws up an "open with" chooser. `market:` and `itms-apps:`
-     are claimed by the store app ALONE — the OS has nothing to disambiguate,
-     so it opens the app directly, which is the behaviour we want.
+     GOAL: one tap lands in the store APP. No web rendering of the store, no
+     "open with" chooser, and no confirmation dialog.
 
-     The scheme is only used on the matching platform: an Android visitor
-     tapping App Store is sending the link to somebody else, and must get the
-     readable web page. A timer restores the web URL if the scheme goes
-     nowhere (a device with Play Store removed, a desktop spoofing a phone).  */
-  var STORE = {
-    ios:{web:"https://apps.apple.com/app/id6804580494",
-         app:"itms-apps://apps.apple.com/app/id6804580494", on:IOS},
-    android:{web:"https://play.google.com/store/apps/details?id=com.kanglalabs.kumsing",
-         app:"market://details?id=com.kanglalabs.kumsing", on:AND}
-  };
+     ⛔ DO NOT put `itms-apps:` back on the iOS button. A CUSTOM SCHEME is what
+     makes iOS ask "Open this page in the App Store?" — that prompt is the OS
+     asking permission to leave the web for an app, and it is unavoidable for a
+     scheme. `https://apps.apple.com/…` is a UNIVERSAL LINK, which is exempt:
+     iOS hands it straight to the App Store with no dialog at all. So the right
+     answer on iOS is the plain https href already in the markup, and the JS
+     does nothing to it. (This page shipped itms-apps: on 2026-09-14 and the
+     owner reported exactly that dialog.)
 
-  Object.keys(STORE).forEach(function(k){
-    var s = STORE[k], el = document.getElementById(k);
-    if(!el) return;
-    el.addEventListener("click", function(e){
-      if(!s.on) return;                       // wrong platform: plain web link
-      e.preventDefault();
-      var left = false;
-      function gone(){ left = true; }
-      document.addEventListener("visibilitychange", gone, {once:true});
-      window.addEventListener("pagehide", gone, {once:true});
-      window.location.href = s.app;
-      setTimeout(function(){
-        if(!left && !document.hidden) window.location.href = s.web;
-      }, 1400);
-    });
-  });
+     On Android the problem is the opposite one. The https Play URL is claimed
+     by the browser AND by Play Store, and that ambiguity is what produces the
+     chooser. An `intent:` URL naming `package=com.android.vending` leaves
+     nothing to disambiguate, so Play Store opens directly — and
+     `browser_fallback_url` covers a device with no Play Store, which is why
+     this needs no timer and no visibility guessing. */
+  if(AND){
+    var play = document.getElementById("android");
+    if(play){
+      play.href = "intent://details?id=com.kanglalabs.kumsing" +
+        "#Intent;scheme=market;package=com.android.vending" +
+        ";S.browser_fallback_url=" +
+        encodeURIComponent(play.href) + ";end";
+    }
+  }
 
   /* Promote the store the visitor can actually install from. Both stay visible
      and tappable — somebody sending the link to a relative is choosing the
      other store, and a page that hides it is wrong.
 
      Promotion is a guess and may be loose: a Mac is shown the App Store on the
-     odds its owner carries an iPhone. The SCHEME above is not a guess and stays
-     strict — firing itms-apps: at a desktop would open nothing. */
+     odds its owner carries an iPhone. The intent: rewrite above is not a guess
+     and stays strict — an intent: URL is inert anywhere but Android. */
   var APPLEISH = IOS || /Macintosh|Mac OS X/.test(UA);
   var mine = document.getElementById(APPLEISH ? "ios" : "android");
   if(mine){ mine.classList.add("primary"); mine.parentNode.prepend(mine); }
