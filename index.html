@@ -152,6 +152,13 @@
                0 0 0 1px rgba(0,180,219,.14),
                0 14px 34px -18px rgba(0,180,219,.55);
   }
+  /* The reassurance line under a CTA pair: Cozy runs "For macOS, Windows,
+     iPhone & iPad · One-time purchase, no subscription" and it answers the
+     three questions a visitor has before they will tap anything. */
+  .fineprint{
+    margin:14px 0 0;font:400 12.5px/1.5 var(--mono);color:var(--text-3);
+    letter-spacing:.02em;
+  }
   .btn small{display:block;font-size:10px;letter-spacing:.1em;
     text-transform:uppercase;color:var(--text-3);font-family:var(--mono);line-height:1.5}
   .btn span{line-height:1.15;white-space:nowrap}
@@ -230,8 +237,23 @@
 
   /* ── Sections ────────────────────────────────────────────────────────── */
   section{padding:78px 0 0}
+  /* Centred section heads, left-aligned hero. Every reference does this —
+     Apple, Cozy and the minimal template all centre a section's kicker,
+     headline and one muted subline, and let the hero carry the asymmetry. */
+  .shead{text-align:center;max-width:60ch;margin-inline:auto}
   h2{font-size:clamp(25px,3.7vw,34px);letter-spacing:-.028em;font-weight:700;margin:0}
-  .sub{margin:11px 0 0;color:var(--text-2);max-width:54ch;font-size:16px}
+  .sub{margin:11px auto 0;color:var(--text-2);max-width:54ch;font-size:16px}
+
+  /* A band: a full-bleed change of ground, hairline-ruled top and bottom. This
+     is how Apple separates one product tile from the next, and it is the one
+     structural device this page was missing — everything ran on one surface. */
+  .band{
+    margin-top:78px;padding:60px 0 66px;
+    border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);
+    background:linear-gradient(180deg,rgba(15,22,38,.85),rgba(10,15,26,.4));
+  }
+  .band>*{width:var(--shell);margin-inline:auto}
+  section.in-band{padding-top:0}
   .kicker{font:500 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;
     color:var(--sky);margin:0 0 14px}
 
@@ -280,26 +302,51 @@
   }
   .showcase.swap .device img{opacity:0}
 
-  .picker{display:flex;flex-direction:column;gap:1px}
+  /* ── The picker ──────────────────────────────────────────────────────────
+     ⛔ These MUST read as controls before they are touched. The first version
+     was borderless text with a bullet dot, which reads as a list of features —
+     the owner reported nobody would discover they were tappable, and they were
+     right: a dot and a label is exactly how this page renders a feature.
+
+     Three affordances now carry it, in the order a visitor meets them:
+       1. a CUE — Cozy Journal labels its demo "Interactive demo" in script with
+          an arrow drawn at it, and that explicit label is the whole trick;
+       2. a BORDER on every row — the minimal template's filter pills
+          (ALL / ILLUSTRATION / WEB) are bordered, and a bordered thing is a
+          thing you press;
+       3. MOTION on hover, and one automatic advance the first time the block is
+          seen, so the visitor watches the device change once.                */
+  .cue{
+    display:flex;align-items:center;gap:8px;margin:0 0 12px 2px;
+    font:500 10.5px/1 var(--mono);letter-spacing:.15em;text-transform:uppercase;
+    color:var(--sky);
+  }
+  .cue svg{width:26px;height:14px;stroke:var(--sky);fill:none;stroke-width:1.5;
+    stroke-linecap:round;stroke-linejoin:round;opacity:.85}
+
+  .picker{display:flex;flex-direction:column;gap:7px}
   .pick{
-    /* Content-width, not column-width: a full-bleed highlight bar reads as a
-       table row. The pill should hug the word. */
-    display:flex;align-items:center;gap:11px;align-self:start;
-    font:500 14.5px/1 Satoshi,sans-serif;color:var(--text-3);cursor:pointer;
-    background:none;border:0;padding:11px 13px;border-radius:11px;text-align:left;
-    transition:color .2s,background .2s;
+    display:flex;align-items:center;gap:10px;align-self:start;cursor:pointer;
+    font:500 14px/1 Satoshi,sans-serif;color:var(--text-2);
+    padding:9px 15px;border-radius:999px;text-align:left;
+    border:1px solid var(--hair);background:rgba(255,255,255,.035);
+    transition:color .2s,background .2s,border-color .2s,transform .16s ease;
   }
   .pick::before{
-    content:"";width:6px;height:6px;border-radius:50%;flex:none;
-    background:currentColor;opacity:.4;transition:background .2s,box-shadow .2s,opacity .2s;
+    content:"";width:5px;height:5px;border-radius:50%;flex:none;
+    background:currentColor;opacity:.45;
+    transition:background .2s,box-shadow .2s,opacity .2s;
   }
-  .pick:hover{color:var(--text-2)}
-  .pick[aria-selected="true"]{color:var(--text);background:rgba(0,180,219,.1)}
+  .pick:hover{color:var(--text);border-color:#33475f;transform:translateX(3px)}
+  .pick[aria-selected="true"]{
+    color:var(--text);border-color:rgba(72,202,228,.6);
+    background:rgba(0,180,219,.13);
+  }
   .pick[aria-selected="true"]::before{
-    background:var(--cyan);opacity:1;box-shadow:0 0 0 3px rgba(0,180,219,.18);
+    background:var(--cyan);opacity:1;box-shadow:0 0 0 3px rgba(0,180,219,.2);
   }
   .note{
-    margin:13px 13px 26px;color:var(--text-3);font-size:13.6px;line-height:1.55;
+    margin:14px 2px 26px;color:var(--text-3);font-size:13.6px;line-height:1.55;
     max-width:36ch;
   }
 
@@ -309,12 +356,19 @@
     .showcase{grid-template-columns:min(170px,44vw) 1fr;justify-content:stretch;
       gap:18px;padding:20px 18px 0}
     .peek{width:100%}
-    .pick{padding:9px 10px;font-size:13.5px;gap:9px}
-    .note{margin:10px 10px 18px;font-size:12.8px}
+    .picker{gap:6px}
+    .pick{padding:8px 12px;font-size:13px;gap:8px}
+    .cue{font-size:9.5px;letter-spacing:.12em;gap:6px;margin-bottom:10px}
+    .cue svg{width:20px}
+    .note{margin:12px 2px 18px;font-size:12.8px}
   }
   @media(max-width:560px){
-    .showcase{gap:13px;padding:16px 14px 0}
-    .pick{padding:8px 9px;font-size:12.8px}
+    .showcase{gap:12px;padding:16px 13px 0}
+    .pick{padding:7px 11px;font-size:12.4px}
+    /* The label stays: an arrow with nothing to say is just a stray mark. It
+       measures ~118px against a 142px column at 320, so it fits. */
+    .cue{font-size:9px;letter-spacing:.08em;gap:5px}
+    .cue svg{width:17px}
     /* The note is a nicety and the column is too narrow to carry it. */
     .note{display:none}
   }
@@ -396,9 +450,9 @@
   </div>
 </nav>
 
-<main class="wrap">
+<main>
 
-  <header>
+  <header class="wrap">
     <span class="eyebrow"><b></b>Manipuri Calendar · Free</span>
     <h1>Every Manipuri date,<br><em>on your phone.</em></h1>
     <p class="lede">
@@ -445,6 +499,7 @@
         <span><small>Get it on</small>Google Play</span>
       </a>
     </div>
+    <p class="fineprint">Free · Android &amp; iPhone · No account, no signal needed</p>
 
     <!-- Filled from data.js: the same panchang rows the app ships. If the
          script fails or the window runs out, the fallback copy below stands. -->
@@ -474,13 +529,16 @@
     </div>
   </header>
 
-  <section>
-    <p class="kicker">The app</p>
-    <h2>Built for how the calendar is actually read.</h2>
-    <p class="sub">
-      Not a Gregorian calendar with festivals bolted on — the amanta month, the
-      tithi at Imphal sunrise, and the printed almanac as the final word.
-    </p>
+  <div class="band">
+  <section class="in-band">
+    <div class="shead">
+      <p class="kicker">The app</p>
+      <h2>Built for how the calendar is actually read.</h2>
+      <p class="sub">
+        Not a Gregorian calendar with festivals bolted on — the amanta month, the
+        tithi at Imphal sunrise, and the printed almanac as the final word.
+      </p>
+    </div>
 
     <div class="showcase" id="stage">
       <div class="peek">
@@ -491,6 +549,11 @@
         </div>
       </div>
       <div class="pickwrap">
+        <p class="cue"><span>Tap to explore</span>
+          <svg viewBox="0 0 26 14" aria-hidden="true">
+            <path d="M1 3c6.5-3 13-1.5 18 3"/><path d="M19 1.5 19.4 6.2 14.8 6"/>
+          </svg>
+        </p>
         <div class="picker" id="tabs" role="tablist" aria-label="App screens"></div>
         <p class="note" id="screenNote"></p>
       </div>
@@ -529,11 +592,14 @@
       </div>
     </div>
   </section>
+  </div>
 
-  <section>
-    <p class="kicker">Elsewhere</p>
-    <h2>Follow the build.</h2>
-    <p class="sub">Manipuri-first apps, made in Imphal. Kumsing is the first.</p>
+  <section class="wrap">
+    <div class="shead">
+      <p class="kicker">Elsewhere</p>
+      <h2>Follow the build.</h2>
+      <p class="sub">Manipuri-first apps, made in Imphal. Kumsing is the first.</p>
+    </div>
     <div class="links">
       <a class="link" href="https://www.instagram.com/kanglalabs/">
         <span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.3.1 1.7.1 4.8s0 3.5-.1 4.8c0 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2 0-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.5.1-4.8c0-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.1 0-3.5 0-4.7.1-1.1 0-1.7.2-2.1.3-.5.2-.9.4-1.2.8-.4.3-.6.7-.8 1.2-.1.4-.3 1-.3 2.1C2.8 9.7 2.8 10.1 2.8 12s0 2.3.1 3.5c0 1.1.2 1.7.3 2.1.2.5.4.9.8 1.2.3.4.7.6 1.2.8.4.1 1 .3 2.1.3 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c1.1 0 1.7-.2 2.1-.3.5-.2.9-.4 1.2-.8.4-.3.6-.7.8-1.2.1-.4.3-1 .3-2.1.1-1.2.1-1.6.1-3.5s0-2.3-.1-3.5c0-1.1-.2-1.7-.3-2.1-.2-.5-.4-.9-.8-1.2-.3-.4-.7-.6-1.2-.8-.4-.1-1-.3-2.1-.3-1.2-.1-1.6-.1-4.7-.1zm0 3.1a4.9 4.9 0 1 1 0 9.8 4.9 4.9 0 0 1 0-9.8zm0 8a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4zm6.3-8.2a1.2 1.2 0 1 1-2.3 0 1.2 1.2 0 0 1 2.3 0z"/></svg></span>
@@ -742,6 +808,27 @@
         new Image().src = "img/shot-" + s[0] + ".webp";
       });
     });
+
+    /* ONE automatic advance, the first time the block is scrolled into view.
+       Seeing the device change once teaches the control better than any label,
+       and it is the demo-nudge Cozy Journal gets from its live demo. It is a
+       nudge, NOT a carousel: it fires once, it cancels the moment the visitor
+       touches anything, and it does not run for a reader who has asked for
+       reduced motion. Do not turn this into a loop. */
+    var nudged = false;
+    tabsEl.addEventListener("click", function(){ nudged = true; }, true);
+
+    var calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if(!calm && "IntersectionObserver" in window){
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(!e.isIntersecting || nudged) return;
+          io.disconnect();
+          setTimeout(function(){ if(!nudged) show(1); }, 1600);
+        });
+      }, {threshold:.55});
+      io.observe(stage);
+    }
   }
 
   /* ── Chrome ───────────────────────────────────────────────────────────── */
